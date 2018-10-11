@@ -35,7 +35,7 @@ class FlowerView: UIView {
 		
 		// Colors
 		self.backgroundColor = UIColor.blue
-		self.layer.backgroundColor = UIColor.red.cgColor
+		self.layer.backgroundColor = UIColor.clear.cgColor
 		
 		if self.strokeColor == nil {
 			self.strokeColor = #colorLiteral(red: 0.9803921569, green: 0.7843137255, blue: 0.2901960784, alpha: 1)
