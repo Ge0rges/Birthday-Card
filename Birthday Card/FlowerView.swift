@@ -93,10 +93,8 @@ class FlowerView: UIView {
 		flowerShapeLayer.strokeColor = self.strokeColor!.cgColor
 		flowerShapeLayer.fillColor = self.fillColor!.cgColor
 		flowerShapeLayer.fillRule = .evenOdd
-		flowerShapeLayer.backgroundColor = UIColor.blue.cgColor
 		
 		// Add the layer
-		self.layer.backgroundColor = UIColor.red.cgColor
 		self.layer.addSublayer(flowerShapeLayer)
 	}
 }
