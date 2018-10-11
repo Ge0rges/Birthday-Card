@@ -55,9 +55,6 @@ class FlowerView: UIView {
 		// to learn how different parameters affect the shape.
 		let flowerPath = UIBezierPath()
 		flowerPath.lineWidth = 1.0
-		//flowerPath.move(to: CGPoint.zero)
-		
-		print("Begining generating path")
 		
 		let k: Double = 9/4 // n/d. If odd k = petals , if even k = petals/2.
 		
@@ -80,13 +77,9 @@ class FlowerView: UIView {
 			}
 		}
 		
-		print("Done generating path")
-		
 		// Create a mask with the path
 		let flowerLayer = CAShapeLayer()
 		flowerLayer.path = flowerPath.cgPath
-		// #colorLiteral(red: 0.9803921569, green: 0.7843137255, blue: 0.2901960784, alpha: 1)
-		
 		flowerLayer.strokeColor = self.strokeColor!.cgColor
 		flowerLayer.fillColor = self.fillColor!.cgColor
 		flowerLayer.fillRule = .evenOdd
