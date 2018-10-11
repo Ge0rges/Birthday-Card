@@ -12,6 +12,7 @@
 		FB4302AD216EED3C0051FCB5 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB4302AB216EED3C0051FCB5 /* Main.storyboard */; };
 		FB4302AF216EED410051FCB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB4302AE216EED410051FCB5 /* Assets.xcassets */; };
 		FB4302B2216EED410051FCB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB4302B0216EED410051FCB5 /* LaunchScreen.storyboard */; };
+		FB4302BA216F0B400051FCB5 /* FlowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4302B9216F0B400051FCB5 /* FlowerView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -22,6 +23,7 @@
 		FB4302AE216EED410051FCB5 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		FB4302B1216EED410051FCB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FB4302B3216EED410051FCB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		FB4302B9216F0B400051FCB5 /* FlowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowerView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -56,6 +58,7 @@
 			children = (
 				FB4302A7216EED3C0051FCB5 /* AppDelegate.swift */,
 				FB4302A9216EED3C0051FCB5 /* ViewController.swift */,
+				FB4302B9216F0B400051FCB5 /* FlowerView.swift */,
 				FB4302AB216EED3C0051FCB5 /* Main.storyboard */,
 				FB4302AE216EED410051FCB5 /* Assets.xcassets */,
 				FB4302B0216EED410051FCB5 /* LaunchScreen.storyboard */,
@@ -136,6 +139,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				FB4302AA216EED3C0051FCB5 /* ViewController.swift in Sources */,
+				FB4302BA216F0B400051FCB5 /* FlowerView.swift in Sources */,
 				FB4302A8216EED3C0051FCB5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -292,7 +296,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ge0rges.Birthday-Card";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Debug;
 		};
@@ -310,7 +314,7 @@
 				PRODUCT_BUNDLE_IDENTIFIER = "com.ge0rges.Birthday-Card";
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				SWIFT_VERSION = 4.2;
-				TARGETED_DEVICE_FAMILY = "1,2";
+				TARGETED_DEVICE_FAMILY = 1;
 			};
 			name = Release;
 		};
