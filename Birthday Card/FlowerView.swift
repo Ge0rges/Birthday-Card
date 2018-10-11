@@ -28,9 +28,14 @@ class FlowerView: UIView {
 	}
 	
 	func setup() {
+		
+		// Frame & Layer
+		self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.width) // Force Square
+		self.clipsToBounds = true
+		
 		// Colors
-		self.backgroundColor = UIColor.clear
-		self.layer.backgroundColor = UIColor.clear.cgColor
+		self.backgroundColor = UIColor.blue
+		self.layer.backgroundColor = UIColor.red.cgColor
 		
 		if self.strokeColor == nil {
 			self.strokeColor = #colorLiteral(red: 0.9803921569, green: 0.7843137255, blue: 0.2901960784, alpha: 1)
@@ -62,10 +67,15 @@ class FlowerView: UIView {
 				let x: Double = amplitude * cos(k*theta) * cos(theta)
 				let y: Double = amplitude * cos(k*theta) * sin(theta)
 				
+				// Scale the coordinates to the view
+				let scaled_x:Double = (x + amplitude) / (amplitude*2) * Double(self.frame.width)
+				let scaled_y:Double = (y + amplitude) / (amplitude*2) * Double(self.frame.height)
+
+				
 				if theta == 0 {
-					flowerPath.move(to: CGPoint(x: x, y: y))
+					flowerPath.move(to: CGPoint(x: scaled_x, y: scaled_y))
 				} else {
-					flowerPath.addLine(to: CGPoint(x: x, y: y))
+					flowerPath.addLine(to: CGPoint(x: scaled_x, y: scaled_y))
 				}
 			}
 		}
@@ -84,12 +94,12 @@ class FlowerView: UIView {
 		
 		// Add the layer
 		self.layer.addSublayer(flowerLayer)
-		
-		// Animate the drawing
-		let animation = CABasicAnimation(keyPath: "strokeEnd")
-		animation.fromValue = 0.0
-		animation.toValue = 1.0
-		animation.duration = 20.0
-		flowerLayer.add(animation, forKey: "drawLineAnimation")
+//
+//		// Animate the drawing
+//		let animation = CABasicAnimation(keyPath: "strokeEnd")
+//		animation.fromValue = 0.0
+//		animation.toValue = 1.0
+//		animation.duration = 20.0
+//		flowerLayer.add(animation, forKey: "drawLineAnimation")
 	}
 }
