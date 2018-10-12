@@ -32,7 +32,7 @@ class FlowerView: UIView {
 		// Frame & Layer
 		self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y,
 							width: self.frame.width, height: self.frame.width) // Force Square
-
+		
 		// Colors
 		if self.strokeColor == nil {
 			self.strokeColor = #colorLiteral(red: 0.9803921569, green: 0.7843137255, blue: 0.2901960784, alpha: 1)
@@ -58,86 +58,78 @@ class FlowerView: UIView {
 		// Draw a flower (UIBezierPath) using polar coordinates: r = cos (k\theta) + c
 		// We chose k = 9/4; c = 5 see https://en.wikipedia.org/wiki/Rose_(mathematics)
 		// to learn how different parameters affect the shape.
-		var flowerPath:UIBezierPath?
-		
+		//var flowerPaths: Array<UIBezierPath> = []
 		let k: Double = 9/4
 		let flowers: Array<Double>! = [Double(100), Double(75), Double(37.5)] // Each item represents a flower length
 		
 		for length in flowers { // len(flowers) = # of flowers
-			let lFlowerPath:UIBezierPath = UIBezierPath()
+			let flowerPath:UIBezierPath = UIBezierPath()
 			
 			let points = cartesianCoordsForPolarFunc(frame: frame, thetaCoefficient: k, cosScalar: length,
 													 iPrecision: 0.01, largestScalar: flowers.max()!)
-			lFlowerPath.move(to: points[0])
+			flowerPath.move(to: points[0])
 			for i in 2...points.count {// Wtf shouldn't theta be going from 0 to 6.28
-				lFlowerPath.addLine(to: points[i-1])
+				flowerPath.addLine(to: points[i-1])
 			}
 			
 			//lFlowerPath.close()
 			print("Closed flower")
-
-			if flowerPath == nil {
-				flowerPath = lFlowerPath
-				
-			} else {
-				flowerPath!.append(lFlowerPath)
-			}
-		}
-		
-		flowerPath!.close()
-		print("Closed Path")
-		
-		// Create a mask with the path
-		DispatchQueue.main.async {
-			let flowerShapeLayer = CAShapeLayer()
-			flowerShapeLayer.path = flowerPath!.cgPath
-			flowerShapeLayer.strokeColor = self.strokeColor!.cgColor
-			flowerShapeLayer.fillColor = self.fillColor!.cgColor
-			flowerShapeLayer.fillRule = .evenOdd
-			flowerShapeLayer.shouldRasterize = true
-			flowerShapeLayer.rasterizationScale = 2.0 * UIScreen.main.scale;
 			
-			if animate {
-				// Set the actual values (CA has presentation layer + another)
-				flowerShapeLayer.strokeStart = 1
-				flowerShapeLayer.fillColor = UIColor.clear.cgColor
+			flowerPath.close()
+			print("Closed Path")
+			
+			// Create a mask with the path
+			DispatchQueue.main.async {
+				let flowerShapeLayer = CAShapeLayer()
+				flowerShapeLayer.path = flowerPath.cgPath
+				flowerShapeLayer.strokeColor = self.strokeColor!.cgColor
+				flowerShapeLayer.fillColor = self.fillColor!.cgColor
+				flowerShapeLayer.fillRule = .evenOdd
+				flowerShapeLayer.shouldRasterize = true
+				flowerShapeLayer.rasterizationScale = 2.0 * UIScreen.main.scale;
 				
-				// Create the stroke animation
-				let strokeAnimation = CABasicAnimation(keyPath: "strokeStart")
-				strokeAnimation.fromValue = 1
-				strokeAnimation.toValue = 0
-				strokeAnimation.duration = 4
-				strokeAnimation.beginTime = 0
-				strokeAnimation.fillMode = .forwards
-				
-				// Create the fill animation
-				let fillAnimation = CABasicAnimation(keyPath: "fillColor")
-				fillAnimation.fromValue = UIColor.clear.cgColor
-				fillAnimation.toValue = self.fillColor!.cgColor
-				fillAnimation.duration = 0.7
-				fillAnimation.beginTime = strokeAnimation.duration
-				
-				// Create the animation group
-				let animationGroup = CAAnimationGroup()
-				animationGroup.animations = [strokeAnimation, fillAnimation]
-				for animation in animationGroup.animations! { // Calculate total animation duration
-					animationGroup.duration += animation.duration
+				if animate {
+					// Set the actual values (CA has presentation layer + another)
+					flowerShapeLayer.strokeStart = 1
+					flowerShapeLayer.fillColor = UIColor.clear.cgColor
+					
+					// Create the stroke animation
+					let strokeAnimation = CABasicAnimation(keyPath: "strokeStart")
+					strokeAnimation.fromValue = 1
+					strokeAnimation.toValue = 0.0
+					strokeAnimation.duration = 4
+					strokeAnimation.beginTime = 0
+					strokeAnimation.fillMode = .forwards
+					
+					// Create the fill animation
+					let fillAnimation = CABasicAnimation(keyPath: "fillColor")
+					fillAnimation.fromValue = UIColor.clear.cgColor
+					fillAnimation.toValue = self.fillColor!.cgColor
+					fillAnimation.duration = 0.7
+					fillAnimation.beginTime = strokeAnimation.duration - 0.1
+					
+					// Create the animation group
+					let animationGroup = CAAnimationGroup()
+					animationGroup.animations = [strokeAnimation, fillAnimation]
+					for animation in animationGroup.animations! { // Calculate total animation duration
+						animationGroup.duration += animation.duration
+					}
+					
+					flowerShapeLayer.add(animationGroup, forKey: nil)
+					
+					// Set the actual values when animation is done
+					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + strokeAnimation.duration, execute: {
+						flowerShapeLayer.strokeStart = 0.0
+					});
+					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + animationGroup.duration - 0.1, execute: {
+						flowerShapeLayer.fillColor = self.fillColor!.cgColor
+					});
+					
 				}
 				
-				flowerShapeLayer.add(animationGroup, forKey: nil)
-
-				// Set the actual values when animation is done
-				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + strokeAnimation.duration, execute: {
-					flowerShapeLayer.strokeStart = 0
-				});
-				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + animationGroup.duration, execute: {
-					flowerShapeLayer.fillColor = self.fillColor!.cgColor
-				});
-
+				// We're done add the layer.
+				self.layer.addSublayer(flowerShapeLayer)
 			}
-			
-			// We're done add the layer.
-			self.layer.addSublayer(flowerShapeLayer)
 		}
 	}
 }
