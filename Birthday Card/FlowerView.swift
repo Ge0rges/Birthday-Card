@@ -67,19 +67,10 @@ class FlowerView: UIView {
 			let lFlowerPath:UIBezierPath = UIBezierPath()
 			
 			let points = cartesianCoordsForPolarFunc(frame: frame, thetaCoefficient: k, cosScalar: length,
-													 iPrecision: 0.001, largestScalar: flowers.max()!)
+													 iPrecision: 0.01, largestScalar: flowers.max()!)
 			lFlowerPath.move(to: points[0])
 			for i in 2...points.count {// Wtf shouldn't theta be going from 0 to 6.28
 				lFlowerPath.addLine(to: points[i-1])
-				
-				// Adnimate drawing the stroke.
-				if animate {
-					DispatchQueue.main.sync {
-						let pointView:UIView = UIView(frame: CGRect(x: points[i-1].x, y:points[i-1].y, width:1, height:1))
-						pointView.backgroundColor = self.strokeColor!
-						self.addSubview(pointView)
-					}
-				}
 			}
 			
 			//lFlowerPath.close()
@@ -105,7 +96,47 @@ class FlowerView: UIView {
 			flowerShapeLayer.fillRule = .evenOdd
 			flowerShapeLayer.shouldRasterize = true
 			flowerShapeLayer.rasterizationScale = 2.0 * UIScreen.main.scale;
-					
+			
+			if animate {
+				// Set the actual values (CA has presentation layer + another)
+				flowerShapeLayer.strokeStart = 1
+				flowerShapeLayer.fillColor = UIColor.clear.cgColor
+				
+				// Create the stroke animation
+				let strokeAnimation = CABasicAnimation(keyPath: "strokeStart")
+				strokeAnimation.fromValue = 1
+				strokeAnimation.toValue = 0
+				strokeAnimation.duration = 4
+				strokeAnimation.beginTime = 0
+				strokeAnimation.fillMode = .forwards
+				
+				// Create the fill animation
+				let fillAnimation = CABasicAnimation(keyPath: "fillColor")
+				fillAnimation.fromValue = UIColor.clear.cgColor
+				fillAnimation.toValue = self.fillColor!.cgColor
+				fillAnimation.duration = 0.7
+				fillAnimation.beginTime = strokeAnimation.duration
+				
+				// Create the animation group
+				let animationGroup = CAAnimationGroup()
+				animationGroup.animations = [strokeAnimation, fillAnimation]
+				for animation in animationGroup.animations! { // Calculate total animation duration
+					animationGroup.duration += animation.duration
+				}
+				
+				flowerShapeLayer.add(animationGroup, forKey: nil)
+
+				// Set the actual values when animation is done
+				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + strokeAnimation.duration, execute: {
+					flowerShapeLayer.strokeStart = 0
+				});
+				DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + animationGroup.duration, execute: {
+					flowerShapeLayer.fillColor = self.fillColor!.cgColor
+				});
+
+			}
+			
+			// We're done add the layer.
 			self.layer.addSublayer(flowerShapeLayer)
 		}
 	}
