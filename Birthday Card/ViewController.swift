@@ -31,7 +31,7 @@ class ViewController: UIViewController {
 	
 	override func viewDidAppear(_ animated: Bool) {
 		if self.flowerView != nil {
-			self.flowerView?.draw(animate: false)
+			self.flowerView?.draw(animate: true)
 		}
 	}
 }

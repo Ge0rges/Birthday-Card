@@ -71,6 +71,15 @@ class FlowerView: UIView {
 			lFlowerPath.move(to: points[0])
 			for i in 2...points.count {// Wtf shouldn't theta be going from 0 to 6.28
 				lFlowerPath.addLine(to: points[i-1])
+				
+				// Adnimate drawing the stroke.
+				if animate {
+					DispatchQueue.main.sync {
+						let pointView:UIView = UIView(frame: CGRect(x: points[i-1].x, y:points[i-1].y, width:1, height:1))
+						pointView.backgroundColor = self.strokeColor!
+						self.addSubview(pointView)
+					}
+				}
 			}
 			
 			//lFlowerPath.close()
@@ -96,19 +105,7 @@ class FlowerView: UIView {
 			flowerShapeLayer.fillRule = .evenOdd
 			flowerShapeLayer.shouldRasterize = true
 			flowerShapeLayer.rasterizationScale = 2.0 * UIScreen.main.scale;
-			
-			if animate {
-				let strokeAnimation = CABasicAnimation(keyPath: "strokeStart")
-				strokeAnimation.fromValue = 1
-				strokeAnimation.toValue = 0
-				strokeAnimation.autoreverses = true
-				strokeAnimation.repeatCount = .infinity
-				strokeAnimation.duration = 5
-				flowerShapeLayer.add(strokeAnimation, forKey: nil)
-
-				flowerShapeLayer.strokeStart = 0
-			}
-			
+					
 			self.layer.addSublayer(flowerShapeLayer)
 		}
 	}
