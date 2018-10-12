@@ -47,6 +47,31 @@ class FlowerView: UIView {
 	}
 	
 	public func draw(animate: Bool, completion:@escaping () -> Void) {
+		// Remove existing flower
+		if self.layer.sublayers != nil {
+			for layer in self.layer.sublayers! {
+				// Fade out
+				if animate {
+					// Set the actual values when animation is done
+					let fadeAnimation = CABasicAnimation(keyPath: "opacity")
+					fadeAnimation.fromValue = 1
+					fadeAnimation.toValue = 0.0
+					fadeAnimation.duration = 0.6
+					fadeAnimation.fillMode = .forwards
+					
+					layer.add(fadeAnimation, forKey: nil)
+					
+					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + fadeAnimation.duration - 0.1, execute: {
+						layer.opacity = 0.0
+						layer.removeFromSuperlayer()
+					})
+					
+				} else {
+					layer.removeFromSuperlayer()
+				}
+			}
+		}
+		
 		// Draw the flower
 		let flowerFrame = self.frame
 		DispatchQueue.global(qos: .background).async {

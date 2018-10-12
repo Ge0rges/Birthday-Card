@@ -12,7 +12,7 @@ class ViewController: UIViewController {
 	var flowerView:FlowerView?
 	var guideLabel:UITextView?
 	
-	var prompts: Array<String> = ["This is why we keep \n Pictures", "Happy Birthday."]
+	var prompts: Array<String> = ["This is why we keep \n Pictures", "Happy Birthday M."]
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -41,6 +41,7 @@ class ViewController: UIViewController {
 		self.guideLabel!.font = UIFont.boldSystemFont(ofSize: 24)
 		self.guideLabel!.textAlignment = .center
 		self.guideLabel!.backgroundColor = UIColor.clear
+		self.guideLabel!.isEditable = false
 
 		self.view.addSubview(self.guideLabel!)
 	}
@@ -66,6 +67,9 @@ class ViewController: UIViewController {
 	func nextPrompt() {
 		if !self.prompts.isEmpty {
 			self.setLabelText(for: self.prompts.removeFirst(), animate: true, completion:{_ in})
+			
+		} else {
+			self.flowerView?.draw(animate: true, completion: {})
 		}
 	}
 	
