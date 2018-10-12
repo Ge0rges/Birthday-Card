@@ -12,7 +12,7 @@ class ViewController: UIViewController {
 	var flowerView:FlowerView?
 	var guideLabel:UITextView?
 	
-	var prompts: Array<String> = ["This is why we keep \n Pictures", "Happy Birthday M."]
+	var prompts: Array<String> = ["Prompt 1", "Prompt 2"]
 	var promptIndex:Int = 0
 	
 	override func viewDidLoad() {
