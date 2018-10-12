@@ -9,7 +9,8 @@
 import UIKit
 
 class ViewController: UIViewController {
-
+	var flowerView:FlowerView?
+	
 	override func viewDidLoad() {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
@@ -24,8 +25,14 @@ class ViewController: UIViewController {
 		
 		let flowerFrame:CGRect = CGRect(x: frameWidth/2 - flowerDimension/2, y: frameHeight/10, width: flowerDimension, height: flowerDimension)
 		let fillPatternColor: UIColor = UIColor.init(patternImage: UIImage(named: "flowerPattern")!)
-		let flowerView: FlowerView = FlowerView(frame: flowerFrame, strokeColor: #colorLiteral(red: 0.5333333333, green: 0.4470588235, blue: 0.137254902, alpha: 1), fillColor: fillPatternColor)
-		self.view.addSubview(flowerView)
+		 self.flowerView = FlowerView(frame: flowerFrame, strokeColor: #colorLiteral(red: 0.5333333333, green: 0.4470588235, blue: 0.137254902, alpha: 1), fillColor: fillPatternColor)
+		self.view.addSubview(self.flowerView!)
+	}
+	
+	override func viewDidAppear(_ animated: Bool) {
+		if self.flowerView != nil {
+			self.flowerView?.draw(animate: false)
+		}
 	}
 }
 

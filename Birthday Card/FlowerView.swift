@@ -44,59 +44,71 @@ class FlowerView: UIView {
 		
 		self.backgroundColor = UIColor.clear
 		self.layer.backgroundColor = UIColor.clear.cgColor
-
-		
+	}
+	
+	public func draw(animate: Bool) {
 		// Draw the flower
 		let flowerFrame = self.frame
-		DispatchQueue.global(qos: .userInteractive).async {
-			self.drawFlower(frame: flowerFrame)
+		DispatchQueue.global(qos: .background).async {
+			self.drawFlower(frame: flowerFrame, animate: animate)
 		}
 	}
 	
-	func drawFlower(frame: CGRect) {
+	private func drawFlower(frame: CGRect, animate:Bool) {
 		// Draw a flower (UIBezierPath) using polar coordinates: r = cos (k\theta) + c
 		// We chose k = 9/4; c = 5 see https://en.wikipedia.org/wiki/Rose_(mathematics)
 		// to learn how different parameters affect the shape.
-		let flowerPath = UIBezierPath()
-		flowerPath.lineWidth = 1.0
+		var flowerPath:UIBezierPath?
 		
-		let k: Double = 9/4 // n/d. If odd k = petals , if even k = petals/2. Check 6
+		let k: Double = 9/4
+		let flowers: Array<Double>! = [Double(100), Double(75), Double(37.5)] // Each item represents a flower length
 		
-		let flowers: Array<Double>! = [Double(100), Double(50)] // Each item represents a flower length
-		for amplitude in flowers { // len(flowers) = # of flowers
-			for theta in stride(from: 0, to: Double.pi * 2 * 100, by: 0.0001) {// Wtf shouldn't theta be going from 0 to 3.28
-				// Convert polar coordinates to cartesion coordinates
-				let x: Double = amplitude * cos(k*theta) * cos(theta)
-				let y: Double = amplitude * cos(k*theta) * sin(theta)
-				
-				// Scale the coordinates to the view
-				// newvalue = (max'-min')/(max-min)*(value-max)+max'
-				let scale_factor:Double = flowers.max()! // Should be largest flower so that smaller flowers appear smaller.
-				let scaled_x:Double = Double(frame.width)/(scale_factor*2) * (x - scale_factor) + Double(frame.width)
-				let scaled_y:Double = Double(frame.height)/(scale_factor*2) * (y - scale_factor) + Double(frame.height)
+		for length in flowers { // len(flowers) = # of flowers
+			let lFlowerPath:UIBezierPath = UIBezierPath()
+			
+			let points = cartesianCoordsForPolarFunc(frame: frame, thetaCoefficient: k, cosScalar: length,
+													 iPrecision: 0.001, largestScalar: flowers.max()!)
+			lFlowerPath.move(to: points[0])
+			for i in 2...points.count {// Wtf shouldn't theta be going from 0 to 6.28
+				lFlowerPath.addLine(to: points[i-1])
+			}
+			
+			//lFlowerPath.close()
+			print("Closed flower")
 
-				if theta == 0 {
-					// (100, 0) then (50, 0)
-					flowerPath.move(to: CGPoint(x:scaled_x, y: scaled_y))
-					// flowerPath.move(to: CGPoint(x: x, y: y))
-				} else {
-					// flowerPath.addLine(to: CGPoint(x: x, y:y))
-					flowerPath.addLine(to: CGPoint(x:scaled_x, y: scaled_y))
-				}
+			if flowerPath == nil {
+				flowerPath = lFlowerPath
+				
+			} else {
+				flowerPath!.append(lFlowerPath)
 			}
 		}
 		
-		flowerPath.close()
+		flowerPath!.close()
+		print("Closed Path")
 		
 		// Create a mask with the path
 		DispatchQueue.main.async {
 			let flowerShapeLayer = CAShapeLayer()
-			flowerShapeLayer.path = flowerPath.cgPath
+			flowerShapeLayer.path = flowerPath!.cgPath
 			flowerShapeLayer.strokeColor = self.strokeColor!.cgColor
 			flowerShapeLayer.fillColor = self.fillColor!.cgColor
 			flowerShapeLayer.fillRule = .evenOdd
+			flowerShapeLayer.shouldRasterize = true
+			flowerShapeLayer.rasterizationScale = 2.0 * UIScreen.main.scale;
 			
-			// Add the layer
+			if animate {
+				let strokeAnimation = CABasicAnimation(keyPath: "strokeStart")
+				strokeAnimation.fromValue = 1
+				strokeAnimation.toValue = 0
+				strokeAnimation.autoreverses = true
+				strokeAnimation.repeatCount = .infinity
+				strokeAnimation.duration = 5
+				flowerShapeLayer.add(strokeAnimation, forKey: nil)
+
+				flowerShapeLayer.strokeStart = 0
+			}
+			
 			self.layer.addSublayer(flowerShapeLayer)
 		}
 	}

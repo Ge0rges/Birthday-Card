@@ -13,6 +13,8 @@
 		FB4302AF216EED410051FCB5 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = FB4302AE216EED410051FCB5 /* Assets.xcassets */; };
 		FB4302B2216EED410051FCB5 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = FB4302B0216EED410051FCB5 /* LaunchScreen.storyboard */; };
 		FB4302BA216F0B400051FCB5 /* FlowerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = FB4302B9216F0B400051FCB5 /* FlowerView.swift */; };
+		FBB18B99216FF214003B68E1 /* ThreadSafeArray.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB18B98216FF214003B68E1 /* ThreadSafeArray.swift */; };
+		FBB18B9B21701791003B68E1 /* PolarCurveCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = FBB18B9A21701791003B68E1 /* PolarCurveCalculator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -24,6 +26,8 @@
 		FB4302B1216EED410051FCB5 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		FB4302B3216EED410051FCB5 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		FB4302B9216F0B400051FCB5 /* FlowerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FlowerView.swift; sourceTree = "<group>"; };
+		FBB18B98216FF214003B68E1 /* ThreadSafeArray.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ThreadSafeArray.swift; sourceTree = "<group>"; };
+		FBB18B9A21701791003B68E1 /* PolarCurveCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PolarCurveCalculator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -59,6 +63,8 @@
 				FB4302A7216EED3C0051FCB5 /* AppDelegate.swift */,
 				FB4302A9216EED3C0051FCB5 /* ViewController.swift */,
 				FB4302B9216F0B400051FCB5 /* FlowerView.swift */,
+				FBB18B9A21701791003B68E1 /* PolarCurveCalculator.swift */,
+				FBB18B98216FF214003B68E1 /* ThreadSafeArray.swift */,
 				FB4302AB216EED3C0051FCB5 /* Main.storyboard */,
 				FB4302AE216EED410051FCB5 /* Assets.xcassets */,
 				FB4302B0216EED410051FCB5 /* LaunchScreen.storyboard */,
@@ -140,6 +146,8 @@
 			files = (
 				FB4302AA216EED3C0051FCB5 /* ViewController.swift in Sources */,
 				FB4302BA216F0B400051FCB5 /* FlowerView.swift in Sources */,
+				FBB18B9B21701791003B68E1 /* PolarCurveCalculator.swift in Sources */,
+				FBB18B99216FF214003B68E1 /* ThreadSafeArray.swift in Sources */,
 				FB4302A8216EED3C0051FCB5 /* AppDelegate.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
