@@ -46,15 +46,15 @@ class FlowerView: UIView {
 		self.layer.backgroundColor = UIColor.clear.cgColor
 	}
 	
-	public func draw(animate: Bool) {
+	public func draw(animate: Bool, completion:@escaping () -> Void) {
 		// Draw the flower
 		let flowerFrame = self.frame
 		DispatchQueue.global(qos: .background).async {
-			self.drawFlower(frame: flowerFrame, animate: animate)
+			self.drawFlower(frame: flowerFrame, animate: animate, completion: completion)
 		}
 	}
 	
-	private func drawFlower(frame: CGRect, animate:Bool) {
+	private func drawFlower(frame: CGRect, animate:Bool, completion:@escaping () -> Void) {
 		// Draw a flower (UIBezierPath) using polar coordinates: r = cos (k\theta) + c
 		// We chose k = 9/4; c = 5 see https://en.wikipedia.org/wiki/Rose_(mathematics)
 		// to learn how different parameters affect the shape.
@@ -66,17 +66,13 @@ class FlowerView: UIView {
 			let flowerPath:UIBezierPath = UIBezierPath()
 			
 			let points = cartesianCoordsForPolarFunc(frame: frame, thetaCoefficient: k, cosScalar: length,
-													 iPrecision: 0.01, largestScalar: flowers.max()!)
+													 iPrecision: 0.001, largestScalar: flowers.max()!)
 			flowerPath.move(to: points[0])
 			for i in 2...points.count {// Wtf shouldn't theta be going from 0 to 6.28
 				flowerPath.addLine(to: points[i-1])
 			}
-			
-			//lFlowerPath.close()
-			print("Closed flower")
-			
+						
 			flowerPath.close()
-			print("Closed Path")
 			
 			// Create a mask with the path
 			DispatchQueue.main.async {
@@ -120,11 +116,25 @@ class FlowerView: UIView {
 					// Set the actual values when animation is done
 					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + strokeAnimation.duration, execute: {
 						flowerShapeLayer.strokeStart = 0.0
-					});
+					})
 					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + animationGroup.duration - 0.1, execute: {
 						flowerShapeLayer.fillColor = self.fillColor!.cgColor
-					});
+						
+						// Completion only if this is the last flower with small delay for animation
+						if length == flowers.last {
+							DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 0.3, execute: {
+								completion()
+							})
+						}
+					})
 					
+				} else {
+					// Completion only if this is the last flower
+					if length == flowers.last {
+						DispatchQueue.main.async {
+							completion()
+						}
+					}
 				}
 				
 				// We're done add the layer.

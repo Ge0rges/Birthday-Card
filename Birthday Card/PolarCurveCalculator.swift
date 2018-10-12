@@ -28,9 +28,9 @@ func cartesianCoordsForPolarFunc(frame: CGRect, thetaCoefficient:Double, cosScal
 	// let r = cosScalar * cos(thetaCoefficient * theta)
 	
 	var points:Array<CGPoint> = [] // We store the points here
-	let upperBound:Double = Double.pi * 2 * 4
+	let upperBound:Double = Double.pi * 8
 	
-	for theta in stride(from: 0, to: upperBound, by: precision) { //TODO: Try to recreate continuity. WHY IS IT NOT 2PI
+	for theta in stride(from: 0, to: upperBound, by: precision) { // Try to recreate continuity.
 		let x = cosScalar * cos(thetaCoefficient * theta) * cos(theta) // Convert to cartesian
 		let y = cosScalar * cos(thetaCoefficient * theta) * sin(theta) // Convert to cartesian
 		
@@ -41,7 +41,6 @@ func cartesianCoordsForPolarFunc(frame: CGRect, thetaCoefficient:Double, cosScal
 		points.append(CGPoint(x: scaled_x, y:scaled_y)) // Add the result
 
 	}
-	print("Done points")
 
 	return points
 }
