@@ -13,6 +13,7 @@ class ViewController: UIViewController {
 	var guideLabel:UITextView?
 	
 	var prompts: Array<String> = ["This is why we keep \n Pictures", "Happy Birthday M."]
+	var promptIndex:Int = 0
 	
 	override func viewDidLoad() {
 		super.viewDidLoad()
@@ -65,11 +66,30 @@ class ViewController: UIViewController {
 	
 	// Helpers
 	func nextPrompt() {
-		if !self.prompts.isEmpty {
-			self.setLabelText(for: self.prompts.removeFirst(), animate: true, completion:{_ in})
+		if promptIndex !=  prompts.count {
+			self.setLabelText(for: self.prompts[promptIndex], animate: true, completion:{_ in})
+			promptIndex += 1
 			
 		} else {
-			self.flowerView?.draw(animate: true, completion: {})
+			// Reset prompts
+			promptIndex = 0
+			
+			// Disable touch
+			self.view.isUserInteractionEnabled = false
+			
+			// Hide label while we draw
+			UIView.animate(withDuration: 0.6, animations: {
+				self.guideLabel!.alpha = 0.0
+			})
+			
+			// Draw anew
+			self.flowerView?.draw(animate: true, completion: {
+				// Show the first text prompt
+				self.nextPrompt()
+				
+				// Enable touch
+				self.view.isUserInteractionEnabled = true
+			})
 		}
 	}
 	
