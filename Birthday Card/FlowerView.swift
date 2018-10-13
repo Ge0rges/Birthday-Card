@@ -85,13 +85,14 @@ class FlowerView: UIView {
 		// to learn how different parameters affect the shape.
 		//var flowerPaths: Array<UIBezierPath> = []
 		let k: Double = 9/4
+		let kDenominator:Double = 4
 		let flowers: Array<Double>! = [Double(100), Double(75), Double(37.5)] // Each item represents a flower length
 		
 		for length in flowers { // len(flowers) = # of flowers
 			let flowerPath:UIBezierPath = UIBezierPath()
 			
-			let points = cartesianCoordsForPolarFunc(frame: frame, thetaCoefficient: k, cosScalar: length,
-													 iPrecision: 0.001, largestScalar: flowers.max()!)
+			let points = cartesianCoordsForPolarFunc(frame: frame, thetaCoefficient: k, thetaCoefficientDenominator:kDenominator,
+													 cosScalar: length, iPrecision: 0.001, largestScalar: flowers.max()!)
 			flowerPath.move(to: points[0])
 			for i in 2...points.count {// Wtf shouldn't theta be going from 0 to 6.28
 				flowerPath.addLine(to: points[i-1])

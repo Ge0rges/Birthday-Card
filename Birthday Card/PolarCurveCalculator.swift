@@ -9,7 +9,7 @@
 import Foundation
 import CoreGraphics
 
-func cartesianCoordsForPolarFunc(frame: CGRect, thetaCoefficient:Double, cosScalar:Double, iPrecision:Double, largestScalar:Double) -> Array<CGPoint> {
+func cartesianCoordsForPolarFunc(frame: CGRect, thetaCoefficient:Double, thetaCoefficientDenominator:Double, cosScalar:Double, iPrecision:Double, largestScalar:Double) -> Array<CGPoint> {
 	
 	// Frame: The frame in which to fit this curve.
 	// thetaCoefficient: The number to scale theta by in the cos.
@@ -28,7 +28,7 @@ func cartesianCoordsForPolarFunc(frame: CGRect, thetaCoefficient:Double, cosScal
 	// let r = cosScalar * cos(thetaCoefficient * theta)
 	
 	var points:Array<CGPoint> = [] // We store the points here
-	let upperBound:Double = Double.pi * 8
+	let upperBound:Double = Double.pi * 8 * thetaCoefficientDenominator
 	
 	for theta in stride(from: 0, to: upperBound, by: precision) { // Try to recreate continuity.
 		let x = cosScalar * cos(thetaCoefficient * theta) * cos(theta) // Convert to cartesian

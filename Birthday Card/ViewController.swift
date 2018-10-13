@@ -11,8 +11,11 @@ import UIKit
 class ViewController: UIViewController {
 	var flowerView:FlowerView?
 	var guideLabel:UITextView?
+	var easterEggImageView:UIImageView?
 	
-	var prompts: Array<String> = ["Prompt 1", "Prompt 2"]
+	var prompts: Array<String> = [""]
+
+
 	var promptIndex:Int = 0
 	
 	override func viewDidLoad() {
@@ -45,6 +48,33 @@ class ViewController: UIViewController {
 		self.guideLabel!.isEditable = false
 
 		self.view.addSubview(self.guideLabel!)
+		
+		// Create and hide the image view
+		self.easterEggImageView = UIImageView(frame: self.view.frame)
+		self.easterEggImageView!.isHidden = true
+		self.easterEggImageView!.image = UIImage(named: "imageName")
+		self.easterEggImageView!.contentMode = .scaleAspectFill
+		self.easterEggImageView!.alpha = 0.0
+
+		self.view.addSubview(self.easterEggImageView!)
+		
+		// Become first responder for shake easter egg
+		self.becomeFirstResponder()
+	}
+	
+	// We are willing to become first responder to get shake motion
+	override var canBecomeFirstResponder: Bool {
+			return true
+	}
+	
+	// Enable detection of shake motion
+	override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
+		if motion == .motionShake && self.easterEggImageView!.isHidden {
+			self.easterEggImageView!.isHidden = false
+			UIView.animate(withDuration: 0.3) {
+				self.easterEggImageView!.alpha = 1.0
+			}
+		}
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
@@ -60,8 +90,20 @@ class ViewController: UIViewController {
 	}
 	
 	override func touchesBegan(_ touches: Set<UITouch>, with event: UIEvent?) {
-		// Show next prompt
-		self.nextPrompt()
+		if self.easterEggImageView!.isHidden {
+			// Show next prompt
+			self.nextPrompt()
+			
+		} else { // Hide easter egg
+			self.setLabelText(for: "This is why we take pictures.", animate: true, completion:{_ in})
+			promptIndex -= 1
+			UIView.animate(withDuration: 0.3, animations: {
+				self.easterEggImageView!.alpha = 0.0
+				
+			}, completion: { _ in
+				self.easterEggImageView!.isHidden = true
+			})
+		}
 	}
 	
 	// Helpers
