@@ -202,14 +202,23 @@ class ViewController: UIViewController {
 		var timeLeftString: String = ""
 		
 		if difference.month! > 0 {
-			timeLeftString += "\(difference.month!) Months"
+			timeLeftString += "\(difference.month!) Month"
+			if difference.month! > 1 {
+				timeLeftString += "s"
+			}
 			
 		} else if difference.day! > 0 {
-			timeLeftString += "\(difference.day!) Days"
-			
+			timeLeftString += "\(difference.day!) Day"
+			if difference.day! > 1 {
+				timeLeftString += "s"
+			}
+
 		} else if difference.hour! > 0 {
-			timeLeftString += "\(difference.hour!) Hours"
-			
+			timeLeftString += "\(difference.hour!) Hour"
+			if difference.hour! > 1 {
+				timeLeftString += "s"
+			}
+
 		} else if difference.minute! > 0 {
 			timeLeftString += "\(difference.minute!):\(difference.second!) Minutes"
 
