@@ -23,12 +23,17 @@ func cartesianCoordsForPolarFunc(frame: CGRect, thetaCoefficient:Double, thetaCo
 		precision = iPrecision
 	}
 	
+	var cThetaCoefficientDenominator:Double = 1 // Default coefficient
+	if thetaCoefficientDenominator != 0 {
+		cThetaCoefficientDenominator = thetaCoefficientDenominator
+	}
+	
 	// This is ther polar function
 	// var theta: Double = 0 //  0 <= theta <= 2pi
 	// let r = cosScalar * cos(thetaCoefficient * theta)
 	
 	var points:Array<CGPoint> = [] // We store the points here
-	let upperBound:Double = Double.pi * 2 * thetaCoefficientDenominator
+	let upperBound:Double = Double.pi * 2 * cThetaCoefficientDenominator
 	
 	for theta in stride(from: 0, to: upperBound, by: precision) { // Try to recreate continuity.
 		let x = cosScalar * cos(thetaCoefficient * theta) * cos(theta) // Convert to cartesian
