@@ -83,17 +83,23 @@ class ViewController: UIViewController {
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
-		if  self.isTodayBirthday().0 {
-			self.flowerView?.draw(animate: true, completion: {
+		let isTodayBirthday = self.isTodayBirthday()
+		if  isTodayBirthday.0 {
+			self.flowerView?.draw(animate: animated, completion: {
 				// Show the first text prompt
 				self.nextPrompt()
 				
 				// Enable touch
 				self.view.isUserInteractionEnabled = true
 			})
+			
 		} else {
-			self.setLabelText(for: "\(self.isTodayBirthday().1) Days left.", animate: true, completion:{_ in})
+			self.setLabelText(for: isTodayBirthday.1, animate: animated, completion:{_ in})
 			promptIndex -= 1
+			
+			DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + 1, execute: {
+				self.viewDidAppear(false)
+			})
 		}
 	}
 	
@@ -161,6 +167,13 @@ class ViewController: UIViewController {
 					self.guideLabel!.alpha = 1.0
 				}, completion: completion)
 			})
+			
+		} else {
+			self.guideLabel!.text = text
+			let height = self.estimatedHeight(forWidth: self.guideLabel!.frame.width, text: text, ofSize: self.guideLabel!.font!.pointSize) + 10
+			self.guideLabel!.frame = CGRect(x: 0, y: self.view.frame.height/2 - height/2,
+											width: self.view.frame.width, height: height)
+			self.guideLabel!.alpha = 1.0
 		}
 	}
 	
@@ -173,7 +186,7 @@ class ViewController: UIViewController {
 		return ceil(rectangleHeight)
 	}
 	
-	func isTodayBirthday() -> (Bool, Int) {
+	func isTodayBirthday() -> (Bool, String) {
 		let todayDate:Date = Date()
 		let calendar:Calendar = Calendar.current
 		let todayMonth:Int = calendar.component(.month, from: todayDate)
@@ -185,9 +198,26 @@ class ViewController: UIViewController {
 		components.day = self.birthdayDay
 		let birthdayDate:Date = calendar.nextDate(after: todayDate, matching: components, matchingPolicy: .nextTimePreservingSmallerComponents)!
 		
-		let difference = calendar.dateComponents([.day], from: todayDate, to: birthdayDate)
+		let difference = calendar.dateComponents([.month, .day, .hour, .minute, .second], from: todayDate, to: birthdayDate)
+		var timeLeftString: String = ""
 		
-		return (todayMonth == self.birthdayMonth && todayDay == self.birthdayDay, difference.day!)
+		if difference.month! > 0 {
+			timeLeftString += "\(difference.month!) Months"
+			
+		} else if difference.day! > 0 {
+			timeLeftString += "\(difference.day!) Days"
+			
+		} else if difference.hour! > 0 {
+			timeLeftString += "\(difference.hour!) Hours"
+			
+		} else if difference.minute! > 0 {
+			timeLeftString += "\(difference.minute!):\(difference.second!) Minutes"
+
+		} else {
+			timeLeftString += "\(difference.second!)"
+		}
+		
+		return (todayMonth == self.birthdayMonth && todayDay == self.birthdayDay, timeLeftString)
 	}
 }
 
