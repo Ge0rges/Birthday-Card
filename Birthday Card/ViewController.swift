@@ -9,13 +9,17 @@
 import UIKit
 
 class ViewController: UIViewController {
+	// Birthdate
+	let birthdayDay:Int = 01
+	let birthdayMonth:Int = 01
+
+	// View
 	var flowerView:FlowerView?
 	var guideLabel:UITextView?
 	var easterEggImageView:UIImageView?
 	
-	var prompts: Array<String> = [""]
-
-
+	// Text
+	var prompts: Array<String>! = [""]
 	var promptIndex:Int = 0
 	
 	override func viewDidLoad() {
@@ -31,7 +35,7 @@ class ViewController: UIViewController {
 		let flowerDimension:CGFloat = frameWidth * 0.6
 		
 		let flowerFrame:CGRect = CGRect(x: frameWidth/2 - flowerDimension/2, y: frameHeight/10, width: flowerDimension, height: flowerDimension)
-		let fillPatternColor: UIColor = UIColor.init(patternImage: UIImage(named: "flowerPattern")!)
+		let fillPatternColor: UIColor = UIColor.init(patternImage: #imageLiteral(resourceName: "flowerPattern"))
 		 self.flowerView = FlowerView(frame: flowerFrame, strokeColor: #colorLiteral(red: 0.5333333333, green: 0.4470588235, blue: 0.137254902, alpha: 1), fillColor: fillPatternColor)
 		self.view.addSubview(self.flowerView!)
 		
@@ -52,8 +56,9 @@ class ViewController: UIViewController {
 		// Create and hide the image view
 		self.easterEggImageView = UIImageView(frame: self.view.frame)
 		self.easterEggImageView!.isHidden = true
-		self.easterEggImageView!.image = UIImage(named: "imageName")
-		self.easterEggImageView!.contentMode = .scaleAspectFill
+		self.easterEggImageView!.image = #imageLiteral(resourceName: "margoDerp")
+		self.easterEggImageView!.contentMode = .scaleAspectFit
+		self.easterEggImageView!.backgroundColor = UIColor.black
 		self.easterEggImageView!.alpha = 0.0
 
 		self.view.addSubview(self.easterEggImageView!)
@@ -69,7 +74,7 @@ class ViewController: UIViewController {
 	
 	// Enable detection of shake motion
 	override func motionEnded(_ motion: UIEvent.EventSubtype, with event: UIEvent?) {
-		if motion == .motionShake && self.easterEggImageView!.isHidden {
+		if motion == .motionShake && self.easterEggImageView!.isHidden && self.isTodayBirthday().0 {
 			self.easterEggImageView!.isHidden = false
 			UIView.animate(withDuration: 0.3) {
 				self.easterEggImageView!.alpha = 1.0
@@ -78,7 +83,7 @@ class ViewController: UIViewController {
 	}
 	
 	override func viewDidAppear(_ animated: Bool) {
-		if self.flowerView != nil {
+		if  self.isTodayBirthday().0 {
 			self.flowerView?.draw(animate: true, completion: {
 				// Show the first text prompt
 				self.nextPrompt()
@@ -86,6 +91,9 @@ class ViewController: UIViewController {
 				// Enable touch
 				self.view.isUserInteractionEnabled = true
 			})
+		} else {
+			self.setLabelText(for: "\(self.isTodayBirthday().1) Days left.", animate: true, completion:{_ in})
+			promptIndex -= 1
 		}
 	}
 	
@@ -163,6 +171,23 @@ class ViewController: UIViewController {
 		let rectangleHeight = String(text).boundingRect(with: size, options: options, attributes: attributes, context: nil).height
 		
 		return ceil(rectangleHeight)
+	}
+	
+	func isTodayBirthday() -> (Bool, Int) {
+		let todayDate:Date = Date()
+		let calendar:Calendar = Calendar.current
+		let todayMonth:Int = calendar.component(.month, from: todayDate)
+		let todayDay:Int = calendar.component(.day, from: todayDate)
+		
+		// Get next birthday
+		var components:DateComponents = DateComponents()
+		components.month = self.birthdayMonth
+		components.day = self.birthdayDay
+		let birthdayDate:Date = calendar.nextDate(after: todayDate, matching: components, matchingPolicy: .nextTimePreservingSmallerComponents)!
+		
+		let difference = calendar.dateComponents([.day], from: todayDate, to: birthdayDate)
+		
+		return (todayMonth == self.birthdayMonth && todayDay == self.birthdayDay, difference.day!)
 	}
 }
 

@@ -127,9 +127,9 @@ class FlowerView: UIView {
 					let fillAnimation = CABasicAnimation(keyPath: "fillColor")
 					fillAnimation.fromValue = UIColor.clear.cgColor
 					fillAnimation.toValue = self.fillColor!.cgColor
-					fillAnimation.duration = 0.7
-					fillAnimation.beginTime = strokeAnimation.duration - 0.1
-					
+					fillAnimation.duration = 0.6
+					fillAnimation.beginTime = strokeAnimation.duration - 0.3
+
 					// Create the animation group
 					let animationGroup = CAAnimationGroup()
 					animationGroup.animations = [strokeAnimation, fillAnimation]
@@ -143,7 +143,8 @@ class FlowerView: UIView {
 					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + strokeAnimation.duration, execute: {
 						flowerShapeLayer.strokeStart = 0.0
 					})
-					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + animationGroup.duration - 0.1, execute: {
+					
+					DispatchQueue.main.asyncAfter(deadline: DispatchTime.now() + animationGroup.duration, execute: {
 						flowerShapeLayer.fillColor = self.fillColor!.cgColor
 						
 						// Completion only if this is the last flower with small delay for animation
