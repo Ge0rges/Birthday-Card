@@ -27,16 +27,18 @@ class ViewController: UIViewController {
 		// Do any additional setup after loading the view, typically from a nib.
 		
 		// Set the background color
-		self.view.backgroundColor = #colorLiteral(red: 0.7743926008, green: 0.07489942989, blue: 0.4046770134, alpha: 1)
+		self.view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 0, alpha: 1)
 		
 		// Set the background gradient
-		let gradientLayer:CAGradientLayer = CAGradientLayer()
-		gradientLayer.frame = self.view.bounds
-		gradientLayer.colors = [#colorLiteral(red: 1, green: 0.07489942989, blue: 0, alpha: 1).cgColor, #colorLiteral(red: 1, green: 1, blue: 0, alpha: 1).cgColor]
-		gradientLayer.drawsAsynchronously = true
+		if self.isTodayBirthday().0 {
+			let gradientLayer:CAGradientLayer = CAGradientLayer()
+			gradientLayer.frame = self.view.bounds
+			gradientLayer.colors = [#colorLiteral(red: 1, green: 0.07489942989, blue: 0, alpha: 1).cgColor, #colorLiteral(red: 1, green: 1, blue: 0, alpha: 1).cgColor]
+			gradientLayer.drawsAsynchronously = true
+			
+			self.view.layer.insertSublayer(gradientLayer, at: 0)
+		}
 		
-		self.view.layer.insertSublayer(gradientLayer, at: 0)
-
 		// Create the flower view
 		let frameWidth:CGFloat  = self.view.frame.width
 		let frameHeight:CGFloat = self.view.frame.height
