@@ -27,7 +27,7 @@ class ViewController: UIViewController {
 		// Do any additional setup after loading the view, typically from a nib.
 		
 		// Set the background color
-		self.view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 0, alpha: 1)
+		self.view.backgroundColor = #colorLiteral(red: 1, green: 1, blue: 0, alpha: 0.7027579698)
 		
 		// Set the background gradient
 		if self.isTodayBirthday().0 {
