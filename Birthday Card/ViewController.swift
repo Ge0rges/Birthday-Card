@@ -26,9 +26,17 @@ class ViewController: UIViewController {
 		super.viewDidLoad()
 		// Do any additional setup after loading the view, typically from a nib.
 		
-		// Set the background color 
-		self.view.backgroundColor = #colorLiteral(red: 0.7568627451, green: 0.662745098, blue: 0.3647058824, alpha: 1)
+		// Set the background color
+		self.view.backgroundColor = #colorLiteral(red: 0.7743926008, green: 0.07489942989, blue: 0.4046770134, alpha: 1)
 		
+		// Set the background gradient
+		let gradientLayer:CAGradientLayer = CAGradientLayer()
+		gradientLayer.frame = self.view.bounds
+		gradientLayer.colors = [#colorLiteral(red: 1, green: 0.07489942989, blue: 0, alpha: 1).cgColor, #colorLiteral(red: 1, green: 1, blue: 0, alpha: 1).cgColor]
+		gradientLayer.drawsAsynchronously = true
+		
+		self.view.layer.insertSublayer(gradientLayer, at: 0)
+
 		// Create the flower view
 		let frameWidth:CGFloat  = self.view.frame.width
 		let frameHeight:CGFloat = self.view.frame.height
@@ -36,7 +44,7 @@ class ViewController: UIViewController {
 		
 		let flowerFrame:CGRect = CGRect(x: frameWidth/2 - flowerDimension/2, y: frameHeight/10, width: flowerDimension, height: flowerDimension)
 		let fillPatternColor: UIColor = UIColor.init(patternImage: #imageLiteral(resourceName: "flowerPattern"))
-		 self.flowerView = FlowerView(frame: flowerFrame, strokeColor: #colorLiteral(red: 0.5333333333, green: 0.4470588235, blue: 0.137254902, alpha: 1), fillColor: fillPatternColor)
+		self.flowerView = FlowerView(frame: flowerFrame, strokeColor: #colorLiteral(red: 0.9998956323, green: 1, blue: 0, alpha: 1), fillColor: fillPatternColor)
 		self.view.addSubview(self.flowerView!)
 		
 		// Disable touches
@@ -85,7 +93,7 @@ class ViewController: UIViewController {
 	override func viewDidAppear(_ animated: Bool) {
 		let isTodayBirthday = self.isTodayBirthday()
 		if  isTodayBirthday.0 {
-			self.flowerView?.draw(animate: animated, completion: {
+			self.flowerView?.draw(animate: true, completion: {
 				// Show the first text prompt
 				self.nextPrompt()
 				
@@ -159,8 +167,7 @@ class ViewController: UIViewController {
 				// Change the text and resize label
 				self.guideLabel!.text = text
 				let height = self.estimatedHeight(forWidth: self.guideLabel!.frame.width, text: text, ofSize: self.guideLabel!.font!.pointSize) + 10
-				self.guideLabel!.frame = CGRect(x: 0, y: self.view.frame.height/2 - height/2,
-												width: self.view.frame.width, height: height)
+				self.guideLabel!.frame = CGRect(x: 0, y: self.view.frame.height/2 - height/2, width: self.view.frame.width, height: height)
 				
 				// Animate change
 				UIView.animate(withDuration: 0.6, animations: {
@@ -171,8 +178,7 @@ class ViewController: UIViewController {
 		} else {
 			self.guideLabel!.text = text
 			let height = self.estimatedHeight(forWidth: self.guideLabel!.frame.width, text: text, ofSize: self.guideLabel!.font!.pointSize) + 10
-			self.guideLabel!.frame = CGRect(x: 0, y: self.view.frame.height/2 - height/2,
-											width: self.view.frame.width, height: height)
+			self.guideLabel!.frame = CGRect(x: 0, y: self.view.frame.height/2 - height/2, width: self.view.frame.width, height: height)
 			self.guideLabel!.alpha = 1.0
 		}
 	}
@@ -191,12 +197,13 @@ class ViewController: UIViewController {
 		let calendar:Calendar = Calendar.current
 		let todayMonth:Int = calendar.component(.month, from: todayDate)
 		let todayDay:Int = calendar.component(.day, from: todayDate)
-		
+
 		// Get next birthday
 		var components:DateComponents = DateComponents()
 		components.month = self.birthdayMonth
 		components.day = self.birthdayDay
 		let birthdayDate:Date = calendar.nextDate(after: todayDate, matching: components, matchingPolicy: .nextTimePreservingSmallerComponents)!
+		let nextBirthdayYear = calendar.component(.year, from: birthdayDate)
 		
 		let difference = calendar.dateComponents([.month, .day, .hour, .minute, .second], from: todayDate, to: birthdayDate)
 		var timeLeftString: String = ""
@@ -226,7 +233,7 @@ class ViewController: UIViewController {
 			timeLeftString += "\(difference.second!)"
 		}
 		
-		return (todayMonth == self.birthdayMonth && todayDay == self.birthdayDay, timeLeftString)
+		return (todayMonth == self.birthdayMonth && todayDay == self.birthdayDay || nextBirthdayYear > 2018, timeLeftString)
 	}
 }
 

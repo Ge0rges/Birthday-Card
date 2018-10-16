@@ -28,10 +28,8 @@ class FlowerView: UIView {
 	}
 	
 	func setup() {
-		
 		// Frame & Layer
-		self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y,
-							width: self.frame.width, height: self.frame.width) // Force Square
+		self.frame = CGRect(x: self.frame.origin.x, y: self.frame.origin.y, width: self.frame.width, height: self.frame.width) // Force Square
 		
 		// Colors
 		if self.strokeColor == nil {
